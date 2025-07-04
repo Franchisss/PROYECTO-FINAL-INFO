@@ -39,6 +39,9 @@ class ControladorImagenes:
     # ========== CONTEO ==========
     def contar_elementos(self):
         return contar_elementos(self.imagen_original)
+    
+    def detectar_esquinas(self):
+        return detectar_esquinas(self.imagen_original)
 
 #---------parte dicom-------------
 
@@ -84,8 +87,7 @@ class ControladorDICOM:
 
         insertar_dicom_nifti(datos)
 
-def detectar_esquinas(self):
-    return detectar_esquinas(self.imagen_original)
+    
 
 
 

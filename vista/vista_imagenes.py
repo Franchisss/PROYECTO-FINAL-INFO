@@ -535,7 +535,7 @@ class InterfazNifti(QtWidgets.QMainWindow):
 class InterfazImagenEsquina(QtWidgets.QMainWindow):
     def __init__(self, imagen_resultado):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagen_esquina.ui", self)
+        uic.loadUi("vista/interfaz_imagen_esquinas.ui", self)
 
         self.imagen_resultado = imagen_resultado
         self.label = self.findChild(QtWidgets.QLabel, "imagen")
