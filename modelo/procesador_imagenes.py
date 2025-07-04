@@ -181,3 +181,18 @@ def insertar_dicom_nifti(datos):
     conexion.commit()
     cursor.close()
     conexion.close()
+
+def detectar_esquinas(imagen):
+    import cv2
+    import numpy as np
+
+    imagen_gris = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+    imagen_gris = np.float32(imagen_gris)
+
+    esquinas = cv2.cornerHarris(imagen_gris, blockSize=2, ksize=3, k=0.04)
+    esquinas = cv2.dilate(esquinas, None)
+
+    imagen_resultado = imagen.copy()
+    imagen_resultado[esquinas > 0.01 * esquinas.max()] = [0, 0, 255]  # rojo
+
+    return imagen_resultado

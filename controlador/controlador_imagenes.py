@@ -9,7 +9,7 @@ from modelo.procesador_imagenes import (
     cambiar_espacio_color,
     aplicar_ecualizacion,
     contar_elementos, 
-    reconstruir_volumen_dicom, convertir_dicom_a_nifti, insertar_dicom_nifti 
+    reconstruir_volumen_dicom, convertir_dicom_a_nifti, insertar_dicom_nifti, detectar_esquinas 
     )
 
 class ControladorImagenes:
@@ -83,6 +83,9 @@ class ControladorDICOM:
         }
 
         insertar_dicom_nifti(datos)
+
+def detectar_esquinas(self):
+    return detectar_esquinas(self.imagen_original)
 
 
 

@@ -46,7 +46,6 @@ class InterfazJPGPNG(QtWidgets.QMainWindow):
         for widget in self.findChildren(QtWidgets.QPushButton):
             print("BOTÓN DETECTADO:", widget.objectName())
 
-        # Ahora conecta (usando self para evitar descarte)
         self.boton_binarizar = self.findChild(QtWidgets.QPushButton, "bnt_binarizar")
         if self.boton_binarizar is None:
             print("NO SE ENCONTRÓ 'bnt_binarizar'")
@@ -61,6 +60,7 @@ class InterfazJPGPNG(QtWidgets.QMainWindow):
         self.findChild(QtWidgets.QPushButton, "bnt_color").clicked.connect(self.abrir_color)
         self.findChild(QtWidgets.QPushButton, "bnt_ecualizar").clicked.connect(self.abrir_ecualizacion)
         self.findChild(QtWidgets.QPushButton, "bnt_contar").clicked.connect(self.abrir_conteo)
+        self.findChild(QtWidgets.QPushButton, "bnt_esquinas").clicked.connect(self.abrir_esquinas)
 
     def abrir_binarizacion(self):
         self.ventana = InterfazBinarizacion(self.ruta_imagen)
@@ -87,6 +87,13 @@ class InterfazJPGPNG(QtWidgets.QMainWindow):
         self.ventana = InterfazConteo(resultado)
         self.ventana.show()
         self.close()
+    
+    def abrir_esquinas(self):
+        resultado = self.controlador.detectar_esquinas()
+        self.ventana = InterfazImagenEsquina(resultado)
+        self.ventana.show()
+        self.close()
+
 
 class InterfazBinarizacion(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
@@ -524,5 +531,39 @@ class InterfazNifti(QtWidgets.QMainWindow):
         if ruta:
             self.controlador.guardar_nifti(ruta)
             self.close()
+
+class InterfazImagenEsquina(QtWidgets.QMainWindow):
+    def __init__(self, imagen_resultado):
+        super().__init__()
+        uic.loadUi("vista/interfaz_imagen_esquina.ui", self)
+
+        self.imagen_resultado = imagen_resultado
+        self.label = self.findChild(QtWidgets.QLabel, "imagen")
+        self.boton_guardar = self.findChild(QtWidgets.QPushButton, "guardar")
+
+        self.mostrar_imagen()
+        self.setWindowTitle("Detección de esquinas (Harris)")
+
+        if self.boton_guardar:
+            self.boton_guardar.clicked.connect(self.guardar_imagen)
+
+    def mostrar_imagen(self):
+        if self.imagen_resultado is not None and self.label is not None:
+            if len(self.imagen_resultado.shape) == 2:
+                h, w = self.imagen_resultado.shape
+                qimg = QImage(self.imagen_resultado.data, w, h, w, QImage.Format_Grayscale8)
+            else:
+                h, w, ch = self.imagen_resultado.shape
+                bytes_per_line = ch * w
+                qimg = QImage(self.imagen_resultado.data, w, h, bytes_per_line, QImage.Format_BGR888)
+
+            pixmap = QPixmap.fromImage(qimg)
+            self.label.setPixmap(pixmap)
+            self.label.setScaledContents(True)
+
+    def guardar_imagen(self):
+        ruta, _ = QFileDialog.getSaveFileName(self, "Guardar imagen", "", "PNG (*.png);;JPG (*.jpg)")
+        if ruta:
+            cv2.imwrite(ruta, self.imagen_resultado)
 
 
