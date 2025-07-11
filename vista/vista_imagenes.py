@@ -424,8 +424,8 @@ class InterfazDICOM(QtWidgets.QMainWindow):
         carpeta = QFileDialog.getExistingDirectory(self, "Seleccionar carpeta DICOM")
         if carpeta:
             self.controlador = ControladorDICOM(carpeta)
-            cortes = self.controlador.obtener_cortes()
-            self.ventana = InterfazSlider(cortes)
+            volumen = self.controlador.obtener_volumen()
+            self.ventana = InterfazSlider(volumen)
             self.ventana.show()
             self.close()
     

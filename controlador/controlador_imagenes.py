@@ -62,6 +62,9 @@ class ControladorDICOM:
             nib.save(self.nifti, ruta)
             self.ruta_nifti = ruta
             self.insertar_en_base_de_datos()
+    
+    def obtener_volumen(self):
+        return self.volumen
 
     def insertar_en_base_de_datos(self):
         # Tomamos el primer archivo DICOM para extraer los metadatos
