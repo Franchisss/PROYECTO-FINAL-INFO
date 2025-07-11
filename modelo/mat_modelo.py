@@ -37,8 +37,14 @@ class MatModel:
 
     def mean_axis1(self, key):
         arr = self.get_array(key)
-        if arr is not None:
-            return np.mean(arr, axis=1)
+        if arr is not None and isinstance(arr, np.ndarray):
+            if arr.ndim == 1:
+                return np.mean(arr)
+            elif arr.ndim == 2:
+                return np.mean(arr, axis=1)
+            elif arr.ndim == 3:
+                # Promedio sobre el eje 1 para cada "canal" y "corte"
+                return np.mean(arr, axis=1)  # Esto da shape (canales, cortes)
         return None
 
     def load_csv_file(self, filepath):

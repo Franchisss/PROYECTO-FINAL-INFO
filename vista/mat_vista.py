@@ -57,4 +57,15 @@ class MatView(QWidget):
         self.canvas = FigureCanvas(self.figure)
         self.layout.addWidget(self.canvas)
 
+        # Botón para graficar dispersión
+        self.scatter_btn = QPushButton("Graficar dispersión (scatter)")
+        self.layout.addWidget(self.scatter_btn)
+
+        self.scatter_x_combo = QComboBox()
+        self.scatter_y_combo = QComboBox()
+        self.layout.addWidget(QLabel("Columna X:"))
+        self.layout.addWidget(self.scatter_x_combo)
+        self.layout.addWidget(QLabel("Columna Y:"))
+        self.layout.addWidget(self.scatter_y_combo)
+
         self.setLayout(self.layout)
