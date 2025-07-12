@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 27-06-2025 a las 05:59:18
+-- Tiempo de generación: 12-07-2025 a las 01:15:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `proyecto3`
 --
-CREATE DATABASE IF NOT EXISTS `proyecto3` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `proyecto3`;
 
 -- --------------------------------------------------------
 
@@ -57,6 +55,22 @@ CREATE TABLE `dicom_nifti` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `senales_mat`
+--
+
+CREATE TABLE `senales_mat` (
+  `id` int(11) NOT NULL,
+  `nombre_archivo` varchar(255) NOT NULL,
+  `llave_seleccionada` varchar(300) NOT NULL,
+  `canales` text NOT NULL,
+  `intervalo` text NOT NULL,
+  `promedio` text NOT NULL,
+  `fecha_subida` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -84,6 +98,12 @@ ALTER TABLE `dicom_nifti`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `senales_mat`
+--
+ALTER TABLE `senales_mat`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -104,6 +124,12 @@ ALTER TABLE `archivos_varios`
 -- AUTO_INCREMENT de la tabla `dicom_nifti`
 --
 ALTER TABLE `dicom_nifti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `senales_mat`
+--
+ALTER TABLE `senales_mat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

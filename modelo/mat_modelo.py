@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from scipy.io import loadmat
 import pandas as pd  # <--- Agrega esta línea
 
@@ -9,9 +10,11 @@ class MatModel:
         self.csv_data = None  # <--- Para almacenar el DataFrame
 
     def load_mat_file(self, filepath):
-        self.data = loadmat(filepath)
-        self.keys = [k for k in self.data.keys() if not k.startswith('__')]
-        return self.keys
+        import scipy.io
+        self.archivo_actual = os.path.basename(filepath)  # ← guarda solo el nombre del archivo
+        self.mat_data = scipy.io.loadmat(filepath)
+        return list(self.mat_data.keys())
+
 
     def get_array(self, key):
         arr = self.data.get(key)

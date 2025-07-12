@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QTableWidgetItem, QInputDialog
+from modelo.conexion_bd import insertar_senal_mat
 import numpy as np
 
 class MatController:
@@ -148,7 +149,18 @@ class MatController:
             ax.stem([mean])
         ax.set_title(f"Promedio eje 1 - {key}")
         ax.set_xlabel("Canal")
-        ax.set_ylabel("Promedio")
+        ax.set_ylabel("Promedio")  
+
+        nombre_archivo = self.model.nombre_archivo  
+        intervalo = (self.view.interval_start.value(), self.view.interval_end.value())
+        ch_text = self.view.channel_input.text()
+        channels = ch_text if ch_text else "Todos"
+        insertar_senal_mat(nombre_archivo, key, channels, intervalo, mean)
+        try:
+            insertar_senal_mat(nombre_archivo, key, channels, intervalo, mean)
+        except Exception as e:
+            print("❌ Error al insertar en la base de datos:", e)
+
         self.view.canvas.draw()
 
     def load_csv(self):
