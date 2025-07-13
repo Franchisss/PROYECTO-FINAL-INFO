@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem,
     QComboBox, QTableView
 )
+from PyQt5.QtCore import Qt
 
 class VistaCSV(QWidget):
     def __init__(self):
@@ -11,10 +12,14 @@ class VistaCSV(QWidget):
         self.setWindowTitle("📁 Visualizador de Archivos CSV")
         self.resize(900, 600)
 
-        # 👉 Layout principal
+        # ✅ Botones nuevos para duplicados y recarga
+        self.boton_limpiar_tabla = QPushButton("💨 Vaciar tabla")
+        self.boton_recargar_csv = QPushButton("🔄 Volver al CSV")
+
+        # 👉 Layout principal vertical
         layout_principal = QVBoxLayout(self)
 
-        # 🎯 Barra superior: carga y combos de gráfico
+        # 🎯 Barra superior con carga y comboboxes
         barra_superior = QHBoxLayout()
         self.boton_cargar = QPushButton("📂 Seleccionar CSV")
         self.boton_grafico = QPushButton("📈 Generar gráfico")
@@ -34,8 +39,15 @@ class VistaCSV(QWidget):
         barra_superior.addWidget(self.combo_y)
         layout_principal.addLayout(barra_superior)
 
-        # 📋 Tabla principal de CSV cargado
+        # 📋 Tabla para mostrar contenido CSV
         self.tabla = QTableView()
         layout_principal.addWidget(QLabel("Contenido del archivo CSV:"))
         layout_principal.addWidget(self.tabla)
 
+        # ✅ Nuevo layout horizontal para los botones extra
+        layout_botones = QHBoxLayout()
+        layout_botones.setSpacing(20)
+        layout_botones.setAlignment(Qt.AlignCenter)
+        layout_botones.addWidget(self.boton_limpiar_tabla)
+        layout_botones.addWidget(self.boton_recargar_csv)
+        layout_principal.addLayout(layout_botones)

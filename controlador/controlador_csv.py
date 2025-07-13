@@ -5,12 +5,14 @@ from modelo.conexion_bd import conectar
 import os
 import mysql.connector
 import traceback
+import pandas as pd
 
 class ControladorCSV:
     def __init__(self, modelo, vista):
         print("🛠️ Iniciando ControladorCSV...")
         self.modelo = modelo
         self.vista = vista
+        self.ruta_csv_actual = None
         self.conectar_eventos()
         print("✅ Eventos conectados correctamente")
 
@@ -19,6 +21,8 @@ class ControladorCSV:
         self.vista.boton_cargar.clicked.connect(self.abrir_csv)
         self.vista.boton_grafico.clicked.connect(self.graficar)
         self.vista.boton_ver_bd.clicked.connect(self.ver_registros_bd)
+        self.vista.boton_limpiar_tabla.clicked.connect(self.limpiar_tabla)
+        self.vista.boton_recargar_csv.clicked.connect(self.recargar_csv)
         print("✅ Botones conectados")
 
     def abrir_csv(self):
@@ -33,6 +37,7 @@ class ControladorCSV:
 
             print("📥 Llamando a modelo.cargar_archivo...")
             df = self.modelo.cargar_archivo(ruta)
+            self.ruta_csv_actual = ruta
             print(f"📊 DataFrame cargado con shape {df.shape}")
 
             if df.empty:
@@ -69,7 +74,7 @@ class ControladorCSV:
         try:
             x = self.vista.combo_x.currentText()
             y = self.vista.combo_y.currentText()
-            df = self.modelo.df
+            df = self.modelo.df.copy()  # ← así trabajás sobre una copia AQUIIIII
             print(f"📌 Columnas seleccionadas: X = {x}, Y = {y}")
 
             if df.empty or x not in df.columns or y not in df.columns:
@@ -189,3 +194,53 @@ class ControladorCSV:
             print("🛑 Error inesperado en ver_registros_bd():")
             traceback.print_exc()
             QMessageBox.critical(None, "Error", f"No se pudieron obtener los registros:\n{ex}")
+    
+    def limpiar_tabla(self):
+        modelo_vacio = QStandardItemModel()
+        self.vista.tabla.setModel(modelo_vacio)
+        print("🧹 Tabla vaciada completamente")
+    
+    def actualizar_tabla(self, df):
+        modelo_tabla = QStandardItemModel()
+        modelo_tabla.setHorizontalHeaderLabels(df.columns.tolist())
+
+        for i in range(df.shape[0]):
+            fila = [QStandardItem(str(val)) for val in df.iloc[i]]
+            modelo_tabla.appendRow(fila)
+
+        self.vista.tabla.setModel(modelo_tabla)
+        print("✅ Tabla actualizada")
+    
+    def detectar_separador(self, ruta):
+        with open(ruta, 'r', encoding='utf-8') as archivo:
+            primera_linea = archivo.readline()
+
+        # Detectar si hay más ; o más ,
+        if primera_linea.count(';') > primera_linea.count(','):
+            return ';'
+        else:
+            return ','
+        
+    def recargar_csv(self):
+        if self.ruta_csv_actual:
+            try:
+                separador = self.detectar_separador(self.ruta_csv_actual)
+                df = pd.read_csv(self.ruta_csv_actual, sep=separador)
+                print(f"📂 CSV recargado con separador '{separador}' — Shape: {df.shape}")
+
+                self.modelo.df = df
+                self.actualizar_tabla(df)
+
+                self.vista.combo_x.clear()
+                self.vista.combo_y.clear()
+                self.vista.combo_x.addItems(df.columns.tolist())
+                self.vista.combo_y.addItems(df.columns.tolist())
+
+                print("🔁 Recarga completada con éxito")
+
+            except Exception as e:
+                print(f"❌ Error al recargar CSV: {e}")
+                QMessageBox.critical(None, "Error al recargar", f"No se pudo cargar correctamente:\n{e}")
+        else:
+            print("⚠️ No hay CSV previamente cargado")
+            QMessageBox.warning(None, "CSV no disponible", "No hay archivo CSV previamente cargado.")

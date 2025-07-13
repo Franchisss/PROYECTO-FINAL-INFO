@@ -50,8 +50,8 @@ class ControladorSelector:
         boton_volver = QPushButton("🔙 Volver")
         boton_salir = QPushButton("🚪 Cerrar sesión")
 
-        vista.layout.addWidget(boton_volver)
-        vista.layout.addWidget(boton_salir)
+        vista.layout().addWidget(boton_volver)
+        vista.layout().addWidget(boton_salir)
 
         boton_volver.clicked.connect(self.mostrar)
         boton_salir.clicked.connect(vista.close)
