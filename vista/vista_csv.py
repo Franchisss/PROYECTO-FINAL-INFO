@@ -1,34 +1,41 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QTableView, QVBoxLayout, QHBoxLayout, QComboBox
+from PyQt5.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton,
+    QTableWidget, QTableWidgetItem,
+    QComboBox, QTableView
+)
 
 class VistaCSV(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Visualizador de CSV")
-        self.resize(800, 500)
+        self.setWindowTitle("📁 Visualizador de Archivos CSV")
+        self.resize(900, 600)
 
-        # Botones principales
-        self.boton_cargar = QPushButton("Seleccionar CSV")
-        self.boton_grafico = QPushButton("Generar gráfico")
-        self.boton_ver_bd = QPushButton("📂 Ver archivos guardados")  # ← Nuevo botón
+        # 👉 Layout principal
+        layout_principal = QVBoxLayout(self)
 
-        # Controles de columna
+        # 🎯 Barra superior: carga y combos de gráfico
+        barra_superior = QHBoxLayout()
+        self.boton_cargar = QPushButton("📂 Seleccionar CSV")
+        self.boton_grafico = QPushButton("📈 Generar gráfico")
+        self.boton_ver_bd = QPushButton("🗃️ Ver archivos guardados")
         self.combo_x = QComboBox()
         self.combo_y = QComboBox()
 
-        # Tabla
+        for boton in [self.boton_cargar, self.boton_grafico, self.boton_ver_bd]:
+            boton.setMinimumWidth(130)
+
+        barra_superior.addWidget(self.boton_cargar)
+        barra_superior.addWidget(self.boton_grafico)
+        barra_superior.addWidget(self.boton_ver_bd)
+        barra_superior.addWidget(QLabel("Eje X:"))
+        barra_superior.addWidget(self.combo_x)
+        barra_superior.addWidget(QLabel("Eje Y:"))
+        barra_superior.addWidget(self.combo_y)
+        layout_principal.addLayout(barra_superior)
+
+        # 📋 Tabla principal de CSV cargado
         self.tabla = QTableView()
-
-        # Layout horizontal para botones y combos
-        layout_botones = QHBoxLayout()
-        layout_botones.addWidget(self.boton_cargar)
-        layout_botones.addWidget(self.boton_grafico)
-        layout_botones.addWidget(self.boton_ver_bd)  # ← Aquí lo agregamos al layout
-        layout_botones.addWidget(self.combo_x)
-        layout_botones.addWidget(self.combo_y)
-
-        # Layout principal
-        layout_principal = QVBoxLayout()
-        layout_principal.addLayout(layout_botones)
+        layout_principal.addWidget(QLabel("Contenido del archivo CSV:"))
         layout_principal.addWidget(self.tabla)
 
-        self.setLayout(layout_principal)

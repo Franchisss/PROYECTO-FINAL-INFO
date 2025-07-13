@@ -1,9 +1,19 @@
+# from PyQt5.QtWidgets import QApplication
+# from controlador.controlador_principal import ControladorPrincipal
+# import sys
+
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     control = ControladorPrincipal()
+#     control.mostrar()
+#     sys.exit(app.exec_())
+
 from PyQt5.QtWidgets import QApplication
-from controlador.controlador_principal import ControladorPrincipal
+from controlador.controlador_prelogin import ControladorPreLogin
 import sys
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    control = ControladorPrincipal()
-    control.mostrar()
+    prelogin = ControladorPreLogin()
+    prelogin.mostrar()
     sys.exit(app.exec_())

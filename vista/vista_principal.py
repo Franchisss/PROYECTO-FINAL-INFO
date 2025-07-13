@@ -1,4 +1,7 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout, QStackedWidget
+from PyQt5.QtWidgets import (
+    QMainWindow, QWidget, QPushButton,
+    QHBoxLayout, QVBoxLayout, QStackedWidget
+)
 
 class VistaPrincipal(QMainWindow):
     def __init__(self):
@@ -6,19 +9,51 @@ class VistaPrincipal(QMainWindow):
         self.setWindowTitle("🔍 Gestor de Archivos Médicos")
         self.setGeometry(100, 100, 1000, 600)
 
-        # Contenedor central
+        # 🧱 Contenedor central (neutro) con layout asignado correctamente
         central_widget = QWidget()
+        layout_principal = QHBoxLayout()
+        central_widget.setLayout(layout_principal)
         self.setCentralWidget(central_widget)
 
-        # Layout principal
-        layout = QVBoxLayout(central_widget)
-
-        # Navegación
+        # 🎯 Menú lateral con botones
+        menu_layout = QVBoxLayout()
         self.boton_csv = QPushButton("📁 Cargar CSV")
-        self.boton_estadisticas = QPushButton("📊 Ver estadísticas")  # para el futuro
-        layout.addWidget(self.boton_csv)
-        layout.addWidget(self.boton_estadisticas)
+        self.boton_estadisticas = QPushButton("📊 Ver estadísticas")
+        self.boton_senales = QPushButton("📈 Señales MAT")
+        self.boton_imagenes = QPushButton("🖼️ Procesamiento de Imágenes")
+        self.boton_salir = QPushButton("🚪 Salir")
+        self.boton_salir.clicked.connect(self.close)
 
-        # Contenedor de vistas
+        botones = [
+            self.boton_csv,
+            self.boton_estadisticas,
+            self.boton_senales,
+            self.boton_imagenes
+        ]
+
+        for boton in botones:
+            boton.setMinimumHeight(40)
+            boton.setStyleSheet("""
+                QPushButton {
+                    background-color: #4285f4;
+                    color: white;
+                    font-weight: bold;
+                    border-radius: 5px;
+                    margin: 4px;
+                }
+                QPushButton:hover {
+                    background-color: #3367d6;
+                }
+            """)
+            menu_layout.addWidget(boton)
+
+        menu_widget = QWidget()
+        menu_widget.setLayout(menu_layout)
+        menu_widget.setFixedWidth(200)
+
+        # 📦 Zona de vistas dinámicas con QStackedWidget
         self.stack = QStackedWidget()
-        layout.addWidget(self.stack)
+
+        # ➕ Agregar ambos al layout principal
+        layout_principal.addWidget(menu_widget)
+        layout_principal.addWidget(self.stack)

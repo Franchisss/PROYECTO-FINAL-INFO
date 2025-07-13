@@ -6,13 +6,15 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5 import QtCore
 import cv2
 import numpy as np
+import os
 
 # ================== MENÚ PRINCIPAL ==================
 class InterfazImagenes(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagenes.ui", self)
-
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_imagenes.ui")
+        uic.loadUi(ui_path, self)
+        
         # Botón para seleccionar JPG/PNG
         self.boton_jpgpng = self.findChild(QtWidgets.QPushButton, "JPGPNG")
         self.boton_jpgpng.clicked.connect(self.abrir_explorador)
@@ -38,7 +40,8 @@ class InterfazImagenes(QtWidgets.QMainWindow):
 class InterfazJPGPNG(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
         super().__init__()
-        uic.loadUi("vista/interfaz_JPGPNG.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_JPGPNG.ui")
+        uic.loadUi(ui_path, self)
         self.ruta_imagen = ruta_imagen
         self.controlador = ControladorImagenes(self.ruta_imagen)
 
@@ -98,7 +101,8 @@ class InterfazJPGPNG(QtWidgets.QMainWindow):
 class InterfazBinarizacion(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
         super().__init__()
-        uic.loadUi("vista/interfaz_binarizacion.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_binarizacion.ui")
+        uic.loadUi(ui_path, self)
         self.ruta_imagen = ruta_imagen
         self.controlador = ControladorImagenes(self.ruta_imagen)
 
@@ -129,7 +133,8 @@ class InterfazBinarizacion(QtWidgets.QMainWindow):
 class InterfazImagenBinarizacion(QtWidgets.QMainWindow):
     def __init__(self, imagen_binaria):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagen_binarizacion.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_imagen_binarizacion.ui")
+        uic.loadUi(ui_path, self)
 
         self.label = self.findChild(QtWidgets.QLabel, "imagen_binarizacion")
         self.boton_guardar = self.findChild(QtWidgets.QPushButton, "guardar")  # ← busca el botón
@@ -156,7 +161,8 @@ class InterfazImagenBinarizacion(QtWidgets.QMainWindow):
 class InterfazMorfologia(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
         super().__init__()
-        uic.loadUi("vista/interfaz_morfologia.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_morfologia.ui")
+        uic.loadUi(ui_path, self)
         self.ruta_imagen = ruta_imagen
         self.controlador = ControladorImagenes(ruta_imagen)
         self.kernel_input = self.findChild(QtWidgets.QSpinBox, "numero")
@@ -225,7 +231,8 @@ class InterfazMorfologia(QtWidgets.QMainWindow):
 class InterfazImagenMorfologia(QtWidgets.QMainWindow):
     def __init__(self, imagen_resultado):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagen_morfologia.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_imagen_morfologia.ui")
+        uic.loadUi(ui_path, self)
 
         self.imagen_resultado = imagen_resultado
         self.label = self.findChild(QtWidgets.QLabel, "imagen")
@@ -256,7 +263,8 @@ class InterfazImagenMorfologia(QtWidgets.QMainWindow):
 class InterfazColor(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
         super().__init__()
-        uic.loadUi("vista/interfaz_color.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_color.ui")
+        uic.loadUi(ui_path, self)
         self.ruta_imagen = ruta_imagen
         self.controlador = ControladorImagenes(ruta_imagen)
 
@@ -310,7 +318,8 @@ class InterfazColor(QtWidgets.QMainWindow):
 class InterfazImagenColor(QtWidgets.QMainWindow):
     def __init__(self, imagen_color):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagen_color.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_imagen_color.ui")
+        uic.loadUi(ui_path, self)
 
         self.imagen_color = imagen_color
         self.label = self.findChild(QtWidgets.QLabel, "imagen")
@@ -341,7 +350,8 @@ class InterfazImagenColor(QtWidgets.QMainWindow):
 class InterfazEcualizacion(QtWidgets.QMainWindow):
     def __init__(self, ruta_imagen):
         super().__init__()
-        uic.loadUi("vista/interfaz_ecualizacion.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_ecualizacion.ui")
+        uic.loadUi(ui_path, self)
 
         self.label = self.findChild(QtWidgets.QLabel, "imagen")
         self.boton_guardar = self.findChild(QtWidgets.QPushButton, "guardar")
@@ -374,7 +384,8 @@ class InterfazEcualizacion(QtWidgets.QMainWindow):
 class InterfazConteo(QtWidgets.QMainWindow):
     def __init__(self, imagen_contada):
         super().__init__()
-        uic.loadUi("vista/interfaz_conteo.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_conteo.ui")
+        uic.loadUi(ui_path, self)
 
         self.imagen_contada = imagen_contada
         self.label = self.findChild(QtWidgets.QLabel, "imagen")
@@ -411,7 +422,8 @@ class VentanaAdvertencia(QtWidgets.QMessageBox):
 class InterfazDICOM(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("vista/interfaz_dicom.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_dicom.ui")
+        uic.loadUi(ui_path, self)
 
         self.boton_cargar = self.findChild(QtWidgets.QPushButton, "cargar")
         self.boton_convertir = self.findChild(QtWidgets.QPushButton, "convertir")
@@ -441,7 +453,8 @@ class InterfazDICOM(QtWidgets.QMainWindow):
 class InterfazSlider(QtWidgets.QMainWindow):
     def __init__(self, volumen_3d):
         super().__init__()
-        uic.loadUi("vista/slider.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "slider.ui")
+        uic.loadUi(ui_path, self)
 
         self.volumen = volumen_3d  # np.ndarray de forma (Z, Y, X)
 
@@ -519,7 +532,8 @@ class InterfazSlider(QtWidgets.QMainWindow):
 class InterfazNifti(QtWidgets.QMainWindow):
     def __init__(self, controlador):
         super().__init__()
-        uic.loadUi("vista/nifti.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "nifti.ui")
+        uic.loadUi(ui_path, self)
 
         self.controlador = controlador
         self.boton_guardar = self.findChild(QtWidgets.QPushButton, "guardar")
@@ -535,7 +549,8 @@ class InterfazNifti(QtWidgets.QMainWindow):
 class InterfazImagenEsquina(QtWidgets.QMainWindow):
     def __init__(self, imagen_resultado):
         super().__init__()
-        uic.loadUi("vista/interfaz_imagen_esquinas.ui", self)
+        ui_path = os.path.join(os.path.dirname(__file__), "interfaz_imagen_esquinas.ui")
+        uic.loadUi(ui_path, self)
 
         self.imagen_resultado = imagen_resultado
         self.label = self.findChild(QtWidgets.QLabel, "imagen")

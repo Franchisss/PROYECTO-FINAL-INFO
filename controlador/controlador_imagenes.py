@@ -89,9 +89,3 @@ class ControladorDICOM:
         }
 
         insertar_dicom_nifti(datos)
-
-    
-
-
-
-
