@@ -69,33 +69,27 @@ class ControladorCSV:
             QMessageBox.critical(None, "Error al cargar CSV", f"Se produjo un error:\n{e}")
 
     def graficar(self):
-        print("📈 Usuario activó botón para graficar")
+        x_col = self.vista.combo_x.currentText()
+        y_col = self.vista.combo_y.currentText()
 
-        try:
-            x = self.vista.combo_x.currentText()
-            y = self.vista.combo_y.currentText()
-            df = self.modelo.df.copy()  # ← así trabajás sobre una copia AQUIIIII
-            print(f"📌 Columnas seleccionadas: X = {x}, Y = {y}")
-
-            if df.empty or x not in df.columns or y not in df.columns:
-                print("⚠️ Columnas inválidas o DataFrame vacío")
-                QMessageBox.warning(None, "Error de selección", "Selecciona columnas válidas para graficar.")
-                return
-
-            print("🖼️ Generando gráfico...")
-            plt.figure(figsize=(6,4))
-            plt.scatter(df[x], df[y], c='blue', alpha=0.6)
-            plt.title(f"{x} vs {y}")
-            plt.xlabel(x)
-            plt.ylabel(y)
-            plt.grid(True)
-            plt.show()
-            print("✅ Gráfico mostrado")
-
-        except Exception as e:
-            print(f"❌ Error al graficar: {e}")
-            QMessageBox.critical(None, "Error", f"No se pudo graficar:\n{e}")
-
+        if x_col and y_col:
+            df = self.modelo.df
+            if x_col in df.columns and y_col in df.columns:
+                self.vista.figure.clear()  # ← limpia gráficos anteriores
+                ax = self.vista.figure.add_subplot(111)
+                ax.plot(df[x_col], df[y_col], marker='o')
+                ax.set_title(f"{y_col} vs {x_col}")
+                ax.set_xlabel(x_col)
+                ax.set_ylabel(y_col)
+                ax.grid(True)
+                self.vista.figure.tight_layout()
+                self.vista.canvas.draw()  # ← pinta en la interfaz CSV
+                print("📈 Gráfico generado en la misma ventana")
+            else:
+                QMessageBox.warning(None, "Columnas inválidas", "Las columnas seleccionadas no existen.")
+        else:
+            QMessageBox.warning(None, "Selección incompleta", "Seleccione las columnas X e Y.")
+    
     def guardar_csv_en_bd(self, ruta_archivo):
         print("🔍 ENTRANDO a guardar_csv_en_bd()")
         print(f"📄 Archivo recibido: {ruta_archivo}")
@@ -196,9 +190,54 @@ class ControladorCSV:
             QMessageBox.critical(None, "Error", f"No se pudieron obtener los registros:\n{ex}")
     
     def limpiar_tabla(self):
-        modelo_vacio = QStandardItemModel()
-        self.vista.tabla.setModel(modelo_vacio)
-        print("🧹 Tabla vaciada completamente")
+        confirmacion = QMessageBox.question(
+            None,
+            "Confirmación",
+            "¿Eliminar solo los registros duplicados en la base de datos?\nSe conservará la primera ocurrencia de cada archivo.",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if confirmacion == QMessageBox.Yes:
+            try:
+                conexion = mysql.connector.connect(
+                    host='127.0.0.1',
+                    port=3306,
+                    user='root',
+                    password='',
+                    database='proyecto3',
+                    connection_timeout=5,
+                    use_pure=True
+                )
+                cursor = conexion.cursor()
+
+                # 🧠 Consulta que elimina duplicados y conserva el primero por combinación clave
+                query = """
+                    DELETE FROM archivos_varios
+                    WHERE id NOT IN (
+                        SELECT MIN(id)
+                        FROM archivos_varios
+                        GROUP BY tipo_archivo, nombre_archivo, ruta_archivo
+                    )
+                """
+                cursor.execute(query)
+                conexion.commit()
+                print("🧹 Duplicados eliminados correctamente")
+
+                # Limpieza visual
+                self.vista.tabla.setModel(QStandardItemModel())
+                self.modelo.df = pd.DataFrame()
+                self.vista.combo_x.clear()
+                self.vista.combo_y.clear()
+
+                QMessageBox.information(None, "Éxito", "Registros duplicados eliminados correctamente.")
+                cursor.close()
+                conexion.close()
+
+            except Exception as e:
+                print(f"❌ Error al eliminar duplicados: {e}")
+                QMessageBox.critical(None, "Error BD", f"No se pudieron eliminar los duplicados:\n{e}")
+        else:
+            print("⛔ Cancelado por el usuario")
     
     def actualizar_tabla(self, df):
         modelo_tabla = QStandardItemModel()
