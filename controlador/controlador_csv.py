@@ -130,13 +130,11 @@ class ControladorCSV:
             QMessageBox.information(None, "Éxito", f"El archivo '{nombre_archivo}' fue guardado en la base de datos.")
 
         except mysql.connector.Error as e:
-            import traceback
             print("❌ Error de conexión o inserción:")
             traceback.print_exc()
             QMessageBox.critical(None, "Error BD", f"Error al guardar en la base de datos:\n{e}")
 
         except Exception as ex:
-            import traceback
             print("🛑 Error inesperado en guardar_csv_en_bd():")
             traceback.print_exc()
             QMessageBox.critical(None, "Error", f"Error inesperado:\n{ex}")
@@ -178,13 +176,11 @@ class ControladorCSV:
             conexion.close()
 
         except mysql.connector.Error as e:
-            import traceback
             print("❌ Error de conexión o consulta:")
             traceback.print_exc()
             QMessageBox.critical(None, "Error BD", f"No se pudieron obtener los registros:\n{e}")
 
         except Exception as ex:
-            import traceback
             print("🛑 Error inesperado en ver_registros_bd():")
             traceback.print_exc()
             QMessageBox.critical(None, "Error", f"No se pudieron obtener los registros:\n{ex}")

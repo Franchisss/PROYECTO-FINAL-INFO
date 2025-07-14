@@ -50,22 +50,28 @@ class VistaCSV(QWidget):
         group_grafico.setLayout(layout_grafico)
         layout.addWidget(group_grafico)
 
-        # 🧹 Botones de tabla
-        self.boton_limpiar_tabla = QPushButton("💨 Eliminar archivos duplicados")
+        # ⚙️ Grupo de acciones sobre el CSV
         self.boton_recargar_csv = QPushButton("🔄 Volver al CSV")
+        self.boton_limpiar_tabla = QPushButton("💨 Eliminar archivos duplicados")
 
-        layout_botones = QHBoxLayout()
-        layout_botones.setSpacing(20)
-        layout_botones.setAlignment(Qt.AlignCenter)
-        layout_botones.addWidget(self.boton_limpiar_tabla)
-        layout_botones.addWidget(self.boton_recargar_csv)
-        layout.addLayout(layout_botones)
+        fila_operaciones = QHBoxLayout()
+        fila_operaciones.setSpacing(30)
+        fila_operaciones.setAlignment(Qt.AlignCenter)
+        fila_operaciones.addWidget(self.boton_recargar_csv)
+        fila_operaciones.addWidget(self.boton_limpiar_tabla)
 
-        # 🔙 Navegación externa (volver / cerrar sesión)
+        grupo_csv = QGroupBox("⚙️ Acciones sobre el CSV")
+        grupo_csv.setLayout(fila_operaciones)
+        layout.addWidget(grupo_csv)
+
+        # 🧭 Grupo de navegación externa
         self.layout_navegacion = QHBoxLayout()
-        self.layout_navegacion.setSpacing(20)
+        self.layout_navegacion.setSpacing(30)
         self.layout_navegacion.setAlignment(Qt.AlignCenter)
-        layout.addLayout(self.layout_navegacion)
+
+        grupo_nav = QGroupBox("🧭 Navegación")
+        grupo_nav.setLayout(self.layout_navegacion)
+        layout.addWidget(grupo_nav)
 
     def agregar_botones_navegacion(self, boton_volver, boton_salir):
         self.layout_navegacion.addWidget(boton_volver)
