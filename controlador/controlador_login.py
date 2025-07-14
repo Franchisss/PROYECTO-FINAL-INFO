@@ -1,26 +1,29 @@
-from vista.vista_login import VistaLogin
 from modelo.modelo_login import ModeloLogin
-from controlador.controlador_principal import ControladorPrincipal
+from vista.ventana_login import VentanaLogin
+from controlador.controlador_selector import ControladorSelector
 from PyQt5.QtWidgets import QMessageBox
 
 class ControladorLogin:
     def __init__(self):
         self.modelo = ModeloLogin()
-        self.vista = VistaLogin()
-        self.vista.boton_ingresar.clicked.connect(self.verificar)
-
-    def mostrar(self):
-        self.vista.show()
+        self.vista = VentanaLogin()
+        self.vista.login_btn.clicked.connect(self.verificar)
 
     def verificar(self):
-        usuario = self.vista.input_usuario.text()
-        contrasena = self.vista.input_contrasena.text()
+        # 📥 Obtener datos ingresados por el usuario
+        usuario = self.vista.usuario_input.text().strip().lower()
+        contrasena = self.vista.contraseña_input.text().strip()
+
+        # 🔐 Verificar credenciales en la base
         rol = self.modelo.verificar_credenciales(usuario, contrasena)
 
         if rol:
-            print(f"🔐 Acceso concedido. Rol: {rol}")
+            print(f"✅ Autenticado: {usuario} como {rol}")
             self.vista.close()
-            principal = ControladorPrincipal(rol)
-            principal.mostrar()
+
+            # 🚀 Lanzar el selector con rol ya verificado
+            self.selector = ControladorSelector(usuario, rol)
+            self.selector.mostrar()
         else:
-            QMessageBox.warning(self.vista, "Error", "Credenciales incorrectas")
+            print("❌ Usuario o contraseña incorrectos")
+            QMessageBox.warning(self.vista, "Error", "Usuario o contraseña incorrectos.")

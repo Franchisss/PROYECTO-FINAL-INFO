@@ -1,15 +1,17 @@
 from PyQt5.QtWidgets import (
-    QMainWindow, QWidget, QPushButton,
+    QMainWindow, QWidget, QPushButton, QLabel,
     QHBoxLayout, QVBoxLayout, QStackedWidget
 )
 
 class VistaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("🔍 Gestor de Archivos Médicos")
         self.setGeometry(100, 100, 1000, 600)
+        self.setStyleSheet("background-color: #f9f9f9;")
 
-        # 🧱 Contenedor central (neutro) con layout asignado correctamente
+        # 🧱 Contenedor central con layout principal
         central_widget = QWidget()
         layout_principal = QHBoxLayout()
         central_widget.setLayout(layout_principal)
@@ -17,6 +19,11 @@ class VistaPrincipal(QMainWindow):
 
         # 🎯 Menú lateral con botones
         menu_layout = QVBoxLayout()
+        self.saludo_label = QLabel("Bienvenido al sistema")
+        self.saludo_label.setStyleSheet(
+            "font-size: 18px; font-weight: bold; color: #333; margin: 10px;")
+        menu_layout.addWidget(self.saludo_label)
+
         self.boton_csv = QPushButton("📁 Cargar CSV")
         self.boton_estadisticas = QPushButton("📊 Ver estadísticas")
         self.boton_senales = QPushButton("📈 Señales MAT")
@@ -54,6 +61,9 @@ class VistaPrincipal(QMainWindow):
         # 📦 Zona de vistas dinámicas con QStackedWidget
         self.stack = QStackedWidget()
 
-        # ➕ Agregar ambos al layout principal
+        # ➕ Agregar menú lateral y stack al layout principal
         layout_principal.addWidget(menu_widget)
         layout_principal.addWidget(self.stack)
+
+        # 🧠 Vista creada correctamente
+        print("🎨 VistaPrincipal inicializada correctamente")

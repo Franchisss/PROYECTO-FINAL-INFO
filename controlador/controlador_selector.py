@@ -10,8 +10,9 @@ from PyQt5.QtWidgets import QPushButton
 
 class ControladorSelector:
     def __init__(self, nombre_usuario, rol):
-        self.vista = VistaSelector(nombre_usuario, rol)
-        self.rol = rol
+        # Normalizar el rol
+        self.rol = rol.strip().lower().replace("á", "a").replace("é", "e")
+        self.vista = VistaSelector(nombre_usuario, self.rol)
 
         self.vista.boton_modulo_especializado.clicked.connect(self.abrir_especializado)
         self.vista.boton_csv.clicked.connect(self.abrir_csv)
@@ -22,14 +23,14 @@ class ControladorSelector:
     def abrir_especializado(self):
         self.vista.close()
 
-        if self.rol == "imagen":
+        if self.rol == "imagenes":
             self.vista_imagenes = InterfazImagenes()
             self.vista_imagenes.show()
-        else:
+
+        elif self.rol == "señales":
             vista = MatView()
             self.controlador_especializado = MatController(MatModel(), vista)
 
-            # Añadir botones de navegación solo si es QWidget
             boton_volver = QPushButton("🔙 Volver")
             boton_salir = QPushButton("🚪 Cerrar sesión")
 
@@ -40,6 +41,9 @@ class ControladorSelector:
             boton_salir.clicked.connect(vista.close)
 
             vista.show()
+
+        else:
+            print(f"⚠️ Rol desconocido: '{self.rol}'. No se puede abrir módulo especializado.")
 
     def abrir_csv(self):
         self.vista.close()
