@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QPushButton
 
 class ControladorSelector:
     def __init__(self, nombre_usuario, rol):
+        self.nombre_usuario = nombre_usuario
         self.rol = rol.strip().lower().replace("á", "a").replace("é", "e")
         self.vista = VistaSelector(nombre_usuario, self.rol)
 
@@ -32,8 +33,13 @@ class ControladorSelector:
             print("🖼️ Lanzando módulo de imágenes desde ControladorSelector")
             self.vista_imagenes.show()
 
+        # elif self.rol == "señales":
+        #     self.vista_senales = MatView()
+        #     self.controlador_senales = MatController(MatModel(), self.vista_senales)
+        #     print("📶 Lanzando módulo de señales desde ControladorSelector")
+        #     self.vista_senales.show()
         elif self.rol == "señales":
-            self.vista_senales = MatView()
+            self.vista_senales = MatView(self.nombre_usuario, self.rol)
             self.controlador_senales = MatController(MatModel(), self.vista_senales)
             print("📶 Lanzando módulo de señales desde ControladorSelector")
             self.vista_senales.show()

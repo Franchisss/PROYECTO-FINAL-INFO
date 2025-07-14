@@ -1,13 +1,15 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QLabel, QComboBox, QHBoxLayout,
-    QFileDialog, QMessageBox, QLineEdit, QSpinBox, QGroupBox, QTableWidget, QTableWidgetItem
+    QFileDialog, QMessageBox, QLineEdit, QSpinBox, QGroupBox
 )
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 class MatView(QWidget):
-    def __init__(self):
+    def __init__(self, usuario, rol):
         super().__init__()
+        self.usuario = usuario
+        self.rol = rol
         self.setWindowTitle("BioSignal Explorer")
         self.setStyleSheet("background-color: #f0f4f7; font-family: Arial;")
         self.layout = QVBoxLayout()
@@ -45,27 +47,32 @@ class MatView(QWidget):
         self.mean_btn = QPushButton("Promedio eje 1 (stem)")
         self.layout.addWidget(self.mean_btn)
 
-        # --- NUEVO: Botón para cargar CSV y tabla para mostrar datos ---
-        self.load_csv_btn = QPushButton("Cargar archivo CSV")
-        self.layout.addWidget(self.load_csv_btn)
-
-        self.table = QTableWidget()
-        self.layout.addWidget(self.table)
-
         # Área de gráficos
         self.figure = Figure(figsize=(8, 4))
         self.canvas = FigureCanvas(self.figure)
         self.layout.addWidget(self.canvas)
-
-        # Botón para graficar dispersión
-        self.scatter_btn = QPushButton("Graficar dispersión (scatter)")
-        self.layout.addWidget(self.scatter_btn)
-
-        self.scatter_x_combo = QComboBox()
-        self.scatter_y_combo = QComboBox()
-        self.layout.addWidget(QLabel("Columna X:"))
-        self.layout.addWidget(self.scatter_x_combo)
-        self.layout.addWidget(QLabel("Columna Y:"))
-        self.layout.addWidget(self.scatter_y_combo)
+        
+        # --- Botones de navegación y sesión ---
+        nav_layout = QHBoxLayout()
+        self.back_btn = QPushButton("🔙 Volver")
+        self.logout_btn = QPushButton("🚪 Cerrar sesión")
+        nav_layout.addWidget(self.back_btn)
+        nav_layout.addWidget(self.logout_btn)
+        self.layout.addLayout(nav_layout)      
 
         self.setLayout(self.layout)
+        
+        # Conectar botones a funciones
+        self.back_btn.clicked.connect(self.volver)
+        self.logout_btn.clicked.connect(self.cerrar_sesion)
+
+    def volver(self):
+        self.close()
+        from controlador.controlador_selector import ControladorSelector
+        self.selector = ControladorSelector(self.usuario, self.rol)
+        self.selector.mostrar()
+
+    def cerrar_sesion(self):
+        # Lógica para cerrar sesión
+        QMessageBox.information(self, "Cerrar sesión", "Sesión cerrada correctamente.")
+        self.close()

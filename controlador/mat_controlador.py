@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox, QFileDialog, QTableWidgetItem, QInputDialog
+from PyQt5.QtWidgets import QMessageBox, QFileDialog, QInputDialog
 import numpy as np
 
 class MatController:
@@ -10,8 +10,7 @@ class MatController:
         self.view.key_combo.currentIndexChanged.connect(self.key_selected)
         self.view.plot_btn.clicked.connect(self.plot_signals)
         self.view.mean_btn.clicked.connect(self.plot_mean)
-        self.view.load_csv_btn.clicked.connect(self.load_csv)
-        self.view.scatter_btn.clicked.connect(self.plot_scatter)
+        
 
     def load_mat(self):
         fname, _ = QFileDialog.getOpenFileName(self.view, "Abrir archivo MAT", "", "Archivos MAT (*.mat)")
@@ -37,7 +36,6 @@ class MatController:
                 self.view.interval_end.setMaximum(arr.shape[1])
                 self.view.interval_end.setValue(arr.shape[1])
             elif arr.ndim == 3:
-                # Por defecto, usa el eje 0 y el primer índice
                 self.view.interval_start.setMaximum(arr.shape[1]-1)
                 self.view.interval_end.setMaximum(arr.shape[1])
                 self.view.interval_end.setValue(arr.shape[1])
@@ -77,14 +75,12 @@ class MatController:
             for idx, ch in enumerate(channels):
                 ax.plot(segment[idx], label=f'Canal {ch}')
         elif arr.ndim == 3:
-            # Pregunta al usuario por el eje y el índice del corte
             eje, ok = QInputDialog.getInt(self.view, "Eje para corte", "¿Sobre qué eje quieres hacer el corte? (0, 1 o 2)", 0, 0, 2, 1)
             if not ok:
                 return
             idx, ok = QInputDialog.getInt(self.view, "Índice del corte", f"¿Qué índice del eje {eje} quieres visualizar? (0 a {arr.shape[eje]-1})", 0, 0, arr.shape[eje]-1, 1)
             if not ok:
                 return
-            # Realiza el corte
             if eje == 0:
                 corte = arr[idx, :, :]
             elif eje == 1:
@@ -94,7 +90,6 @@ class MatController:
             else:
                 QMessageBox.warning(self.view, "Error", "Eje inválido.")
                 return
-            # Ahora corte es 2D, grafica como antes
             if ch_text:
                 try:
                     channels = [int(x) for x in ch_text.split(',')]
@@ -136,7 +131,6 @@ class MatController:
             elif mean.ndim == 1:
                 ax.stem(mean)
             elif mean.ndim == 2:
-                # Para 3D: pregunta por el índice del corte a graficar
                 idx, ok = QInputDialog.getInt(self.view, "Índice del corte", f"¿Qué corte quieres graficar? (0 a {mean.shape[1]-1})", 0, 0, mean.shape[1]-1, 1)
                 if not ok:
                     return
@@ -149,38 +143,4 @@ class MatController:
         ax.set_title(f"Promedio eje 1 - {key}")
         ax.set_xlabel("Canal")
         ax.set_ylabel("Promedio")
-        self.view.canvas.draw()
-
-    def load_csv(self):
-        fname, _ = QFileDialog.getOpenFileName(self.view, "Abrir archivo CSV", "", "Archivos CSV (*.csv)")
-        if fname:
-            df = self.model.load_csv_file(fname)
-            self.view.table.setRowCount(df.shape[0])
-            self.view.table.setColumnCount(df.shape[1])
-            self.view.table.setHorizontalHeaderLabels(df.columns)
-            for i in range(df.shape[0]):
-                for j in range(df.shape[1]):
-                    self.view.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
-        # Pobla los combos para scatter
-        self.view.scatter_x_combo.clear()
-        self.view.scatter_y_combo.clear()
-        self.view.scatter_x_combo.addItems(df.columns)
-        self.view.scatter_y_combo.addItems(df.columns)
-
-    def plot_scatter(self):
-        df = self.model.csv_data
-        if df is None:
-            QMessageBox.warning(self.view, "Error", "Primero cargue un archivo CSV.")
-            return
-        x_col = self.view.scatter_x_combo.currentText()
-        y_col = self.view.scatter_y_combo.currentText()
-        if x_col == "" or y_col == "":
-            QMessageBox.warning(self.view, "Error", "Seleccione ambas columnas.")
-            return
-        self.view.figure.clear()
-        ax = self.view.figure.add_subplot(111)
-        ax.scatter(df[x_col], df[y_col])
-        ax.set_xlabel(x_col)
-        ax.set_ylabel(y_col)
-        ax.set_title(f"Gráfico de dispersión: {x_col} vs {y_col}")
         self.view.canvas.draw()
