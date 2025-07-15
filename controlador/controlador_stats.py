@@ -24,7 +24,7 @@ class ControladorStats:
             cursor.execute("SELECT tipo_archivo, COUNT(*) FROM archivos_varios GROUP BY tipo_archivo")
             resultados = cursor.fetchall()
 
-            texto = "📊 Estadísticas de archivos por tipo:\n\n"
+            texto = "Estadísticas de archivos por tipo:\n\n"
             for tipo, cantidad in resultados:
                 texto += f"• {tipo}: {cantidad} archivos\n"
 

@@ -16,36 +16,36 @@ class ControladorPrincipal:
         self.vista = VistaPrincipal()
         self.vista.setAttribute(103)  # Qt.WA_QuitOnClose
 
-        # 👋 Saludo visual
+        # Saludo visual
         self.vista.saludo_label.setText(
-            f"👋 Hola {usuario}, bienvenido al sistema como experto en {rol}.")
+            f"Hola {usuario}, bienvenido al sistema como experto en {rol}.")
 
-        print("🧠 ControladorPrincipal iniciado")
+        print("ControladorPrincipal iniciado")
         print(f"→ Rol recibido: {rol}")
         print(f"→ Usuario recibido: {usuario}")
         print(f"→ Vista tipo: {type(self.vista)}")
 
-        # 📁 Módulo CSV
+        # Módulo CSV
         self.vista_csv = VistaCSV()
         self.modelo_csv = ModeloCSV()
         self.controlador_csv = ControladorCSV(self.modelo_csv, self.vista_csv)
         self.vista.stack.addWidget(self.vista_csv)
 
-        # 📊 Módulo Estadísticas
+        # Módulo Estadísticas
         self.vista_stats = VistaStats()
         self.controlador_stats = ControladorStats(self.vista_stats)
         self.vista.stack.addWidget(self.vista_stats)
 
-        # 📈 Módulo Señales MAT
+        # Módulo Señales MAT
         self.vista_mat = MatView()
         self.controlador_mat = MatController(MatModel(), self.vista_mat)
         self.vista.stack.addWidget(self.vista_mat)
 
-        # 🖼️ Módulo Imágenes
+        # Módulo Imágenes
         self.vista_imagenes = InterfazImagenes()
         self.vista.stack.addWidget(self.vista_imagenes)
 
-        # 🔗 Conexiones de menú lateral
+        # Conexiones de menú lateral
         self.vista.boton_csv.clicked.connect(
             lambda: self.vista.stack.setCurrentWidget(self.vista_csv))
         self.vista.boton_estadisticas.clicked.connect(
@@ -55,7 +55,7 @@ class ControladorPrincipal:
         self.vista.boton_imagenes.clicked.connect(
             lambda: self.vista.stack.setCurrentWidget(self.vista_imagenes))
 
-        # 🧠 Activación dinámica de módulos según rol
+        # Activación dinámica de módulos según rol
         if rol.strip().lower() == "imagenes":
             self.vista.boton_csv.setVisible(True)
             self.vista.boton_imagenes.setVisible(True)
@@ -73,14 +73,14 @@ class ControladorPrincipal:
         else:
             self.vista.stack.setCurrentWidget(self.vista_csv)
 
-        # 🧩 Debug visual en consola
-        print("🧩 Vistas en el stack:")
+        # Debug visual en consola
+        print("Vistas en el stack:")
         for i in range(self.vista.stack.count()):
             print(f" - {self.vista.stack.widget(i).__class__.__name__}")
 
-        # 💥 MOSTRAR LA VISTA PRINCIPAL 🔥
-        print("👀 Mostrando vista principal... FORZADO")
-        self.vista.setWindowTitle("👋 Hola Adrián, sistema activo")
+        # MOSTRAR LA VISTA PRINCIPAL 
+        print("Mostrando vista principal... FORZADO")
+        self.vista.setWindowTitle("Hola Adrián, sistema activo")
         self.vista.move(200, 200)
         self.vista.resize(1000, 600)
         self.vista.show()

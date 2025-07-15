@@ -6,7 +6,7 @@ class VistaStats(QWidget):
 
         layout = QVBoxLayout(self)
 
-        self.boton_actualizar = QPushButton("🔃 Actualizar estadísticas")
+        self.boton_actualizar = QPushButton("Actualizar estadísticas")
         self.resultado = QTextEdit()
         self.resultado.setReadOnly(True)
 

@@ -30,22 +30,22 @@ class ControladorSelector:
 
         if self.rol == "imagenes":
             self.vista_imagenes = InterfazImagenes()
-            print("🖼️ Lanzando módulo de imágenes desde ControladorSelector")
+            print("Lanzando módulo de imágenes desde ControladorSelector")
             self.vista_imagenes.show()
 
         # elif self.rol == "señales":
         #     self.vista_senales = MatView()
         #     self.controlador_senales = MatController(MatModel(), self.vista_senales)
-        #     print("📶 Lanzando módulo de señales desde ControladorSelector")
+        #     print("Lanzando módulo de señales desde ControladorSelector")
         #     self.vista_senales.show()
         elif self.rol == "señales":
             self.vista_senales = MatView(self.nombre_usuario, self.rol)
             self.controlador_senales = MatController(MatModel(), self.vista_senales)
-            print("📶 Lanzando módulo de señales desde ControladorSelector")
+            print("Lanzando módulo de señales desde ControladorSelector")
             self.vista_senales.show()
 
         else:
-            print(f"⚠️ Rol desconocido: '{self.rol}'")
+            print(f"Rol desconocido: '{self.rol}'")
             self.vista.show()
 
     def abrir_csv(self):
@@ -54,13 +54,13 @@ class ControladorSelector:
         self.vista_csv = VistaCSV()
         self.controlador_csv = ControladorCSV(ModeloCSV(), self.vista_csv)
 
-        boton_volver = QPushButton("🔙 Volver")
-        boton_salir = QPushButton("🚪 Cerrar sesión")
+        boton_volver = QPushButton("Volver")
+        boton_salir = QPushButton("Cerrar sesión")
 
         try:
             self.vista_csv.agregar_botones_navegacion(boton_volver, boton_salir)
         except:
-            print("⚠️ VistaCSV no tiene método agregar_botones_navegacion")
+            print("VistaCSV no tiene método agregar_botones_navegacion")
 
         boton_volver.clicked.connect(lambda: (self.vista_csv.close(), self.vista.show()))
         boton_salir.clicked.connect(lambda: (self.vista_csv.close(), self.reiniciar_login()))

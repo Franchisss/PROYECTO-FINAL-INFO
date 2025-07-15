@@ -10,20 +10,20 @@ class ControladorLogin:
         self.vista.login_btn.clicked.connect(self.verificar)
 
     def verificar(self):
-        # 📥 Obtener datos ingresados por el usuario
+        # Obtener datos ingresados por el usuario
         usuario = self.vista.usuario_input.text().strip().lower()
         contrasena = self.vista.contraseña_input.text().strip()
 
-        # 🔐 Verificar credenciales en la base
+        # Verificar credenciales en la base
         rol = self.modelo.verificar_credenciales(usuario, contrasena)
 
         if rol:
-            print(f"✅ Autenticado: {usuario} como {rol}")
+            print(f"Autenticado: {usuario} como {rol}")
             self.vista.close()
 
-            # 🚀 Lanzar el selector con rol ya verificado
+            # Lanzar el selector con rol ya verificado
             self.selector = ControladorSelector(usuario, rol)
             self.selector.mostrar()
         else:
-            print("❌ Usuario o contraseña incorrectos")
+            print("Usuario o contraseña incorrectos")
             QMessageBox.warning(self.vista, "Error", "Usuario o contraseña incorrectos.")

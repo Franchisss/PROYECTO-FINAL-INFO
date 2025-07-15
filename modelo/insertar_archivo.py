@@ -5,7 +5,7 @@ tipo = 'CSV'
 nombre = 'notas_finales.csv'
 ruta = 'C:/Users/adria/Documents/notas_finales.csv'
 
-print("📥 Conectando para insertar...")
+print("Conectando para insertar...")
 
 try:
     conexion = mysql.connector.connect(
@@ -26,13 +26,13 @@ try:
     cursor.execute(query, valores)
     conexion.commit()
 
-    print(f"✅ Archivo guardado: {cursor.rowcount} fila(s) insertada(s)")
+    print(f"Archivo guardado: {cursor.rowcount} fila(s) insertada(s)")
 
     cursor.close()
     conexion.close()
 
 except mysql.connector.Error as error:
-    print(f"❌ Error MySQL: {error}")
+    print(f"Error MySQL: {error}")
 
 except Exception as ex:
-    print(f"🛑 Otro error: {ex}")
+    print(f"Otro error: {ex}")

@@ -14,17 +14,17 @@ class ModeloCSV:
             else:
                 return ','
         except Exception as e:
-            print(f"⚠️ No se pudo detectar separador automáticamente: {e}")
+            print(f"No se pudo detectar separador automáticamente: {e}")
             return ','  # ← valor por defecto
 
     def cargar_archivo(self, ruta):
         try:
             sep = self.detectar_separador(ruta)
             self.df = pd.read_csv(ruta, sep=sep)
-            print(f"📊 CSV cargado con separador '{sep}' — Shape: {self.df.shape}")
+            print(f"CSV cargado con separador '{sep}' — Shape: {self.df.shape}")
             return self.df
         except Exception as e:
-            print(f"❌ Error al cargar CSV: {e}")
+            print(f"Error al cargar CSV: {e}")
             return pd.DataFrame()
 
     def obtener_columnas(self):
@@ -46,11 +46,11 @@ class ModeloCSV:
             """
             cursor.execute(query, (tipo, nombre, ruta))
             conexion.commit()
-            print(f"✅ Archivo guardado: {cursor.rowcount} fila(s) insertada(s)")
+            print(f"Archivo guardado: {cursor.rowcount} fila(s) insertada(s)")
             cursor.close()
             conexion.close()
         except Exception as e:
-            print(f"❌ Error al insertar: {e}")
+            print(f"Error al insertar: {e}")
 
     def listar_archivos(self):
         try:
@@ -68,7 +68,7 @@ class ModeloCSV:
             conexion.close()
             return registros
         except Exception as e:
-            print(f"❌ Error al listar archivos: {e}")
+            print(f"Error al listar archivos: {e}")
             return []
 
     def eliminar_registro(self, id):
@@ -87,7 +87,7 @@ class ModeloCSV:
             cursor.close()
             conexion.close()
         except Exception as e:
-            print(f"❌ Error al eliminar: {e}")
+            print(f"Error al eliminar: {e}")
 
     def buscar_por_nombre(self, nombre_parcial):
         try:
@@ -106,7 +106,7 @@ class ModeloCSV:
             conexion.close()
             return resultados
         except Exception as e:
-            print(f"❌ Error al buscar: {e}")
+            print(f"Error al buscar: {e}")
             return []
 
     def contar_por_tipo(self):
@@ -125,5 +125,5 @@ class ModeloCSV:
             conexion.close()
             return conteo
         except Exception as e:
-            print(f"❌ Error al contar tipos: {e}")
+            print(f"Error al contar tipos: {e}")
             return []

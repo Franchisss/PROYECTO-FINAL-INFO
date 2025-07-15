@@ -7,28 +7,28 @@ class VistaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("🔍 Gestor de Archivos Médicos")
+        self.setWindowTitle("Gestor de Archivos Médicos")
         self.setGeometry(100, 100, 1000, 600)
         self.setStyleSheet("background-color: #f9f9f9;")
 
-        # 🧱 Contenedor central con layout principal
+        # Contenedor central con layout principal
         central_widget = QWidget()
         layout_principal = QHBoxLayout()
         central_widget.setLayout(layout_principal)
         self.setCentralWidget(central_widget)
 
-        # 🎯 Menú lateral con botones
+        # Menú lateral con botones
         menu_layout = QVBoxLayout()
         self.saludo_label = QLabel("Bienvenido al sistema")
         self.saludo_label.setStyleSheet(
             "font-size: 18px; font-weight: bold; color: #333; margin: 10px;")
         menu_layout.addWidget(self.saludo_label)
 
-        self.boton_csv = QPushButton("📁 Cargar CSV")
-        self.boton_estadisticas = QPushButton("📊 Ver estadísticas")
-        self.boton_senales = QPushButton("📈 Señales MAT")
-        self.boton_imagenes = QPushButton("🖼️ Procesamiento de Imágenes")
-        self.boton_salir = QPushButton("🚪 Salir")
+        self.boton_csv = QPushButton("Cargar CSV")
+        self.boton_estadisticas = QPushButton("Ver estadísticas")
+        self.boton_senales = QPushButton("Señales MAT")
+        self.boton_imagenes = QPushButton("Procesamiento de Imágenes")
+        self.boton_salir = QPushButton("Salir")
         self.boton_salir.clicked.connect(self.close)
 
         botones = [
@@ -58,12 +58,12 @@ class VistaPrincipal(QMainWindow):
         menu_widget.setLayout(menu_layout)
         menu_widget.setFixedWidth(200)
 
-        # 📦 Zona de vistas dinámicas con QStackedWidget
+        # Zona de vistas dinámicas con QStackedWidget
         self.stack = QStackedWidget()
 
-        # ➕ Agregar menú lateral y stack al layout principal
+        # Agregar menú lateral y stack al layout principal
         layout_principal.addWidget(menu_widget)
         layout_principal.addWidget(self.stack)
 
-        # 🧠 Vista creada correctamente
-        print("🎨 VistaPrincipal inicializada correctamente")
+        # Vista creada correctamente
+        print("VistaPrincipal inicializada correctamente")

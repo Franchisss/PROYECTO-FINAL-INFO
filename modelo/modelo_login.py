@@ -9,9 +9,9 @@ class ModeloLogin:
                 password="",  # Tu MySQL no tiene contraseña
                 database="proyecto3"
             )
-            print("🗄️ Conexión a base de datos (PyMySQL) exitosa")
+            print("Conexión a base de datos (PyMySQL) exitosa")
         except pymysql.MySQLError as e:
-            print(f"❌ Error de conexión MySQL: {e}")
+            print(f"Error de conexión MySQL: {e}")
             self.conexion = None
 
     def verificar_credenciales(self, usuario, contrasena):
@@ -27,11 +27,11 @@ class ModeloLogin:
 
             if resultado:
                 rol_raw = resultado[0].strip().lower()
-                # 🔄 Normalizar tildes y plural
+                # Normalizar tildes y plural
                 rol = rol_raw.replace("á", "a").replace("é", "e")
-                print(f"🎯 Rol detectado: {rol}")
+                print(f"Rol detectado: {rol}")
                 return rol
             return None
         except Exception as e:
-            print(f"🔥 Error al verificar credenciales: {e}")
+            print(f"Error al verificar credenciales: {e}")
             return None

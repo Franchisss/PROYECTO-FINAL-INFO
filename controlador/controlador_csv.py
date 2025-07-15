@@ -14,25 +14,25 @@ class ControladorCSV:
         self.vista = vista
         self.ruta_csv_actual = None
         self.conectar_eventos()
-        print("✅ Eventos conectados correctamente")
+        print("Eventos conectados correctamente")
 
     def conectar_eventos(self):
-        print("🔗 Conectando botones...")
+        print("Conectando botones...")
         self.vista.boton_cargar.clicked.connect(self.abrir_csv)
         self.vista.boton_grafico.clicked.connect(self.graficar)
         self.vista.boton_ver_bd.clicked.connect(self.ver_registros_bd)
         self.vista.boton_limpiar_tabla.clicked.connect(self.limpiar_tabla)
         self.vista.boton_recargar_csv.clicked.connect(self.recargar_csv)
-        print("✅ Botones conectados")
+        print("Botones conectados")
 
     def abrir_csv(self):
-        print("🚨 PASO 0: Usuario activó botón para cargar CSV")
+        print("PASO 0: Usuario activó botón para cargar CSV")
 
         try:
             ruta, _ = QFileDialog.getOpenFileName(None, "Abrir CSV", "", "CSV files (*.csv)")
-            print(f"📂 Ruta seleccionada: {ruta}")
+            print(f"Ruta seleccionada: {ruta}")
             if not ruta:
-                print("⚠️ Usuario canceló la selección del archivo.")
+                print("Usuario canceló la selección del archivo.")
                 return
 
             print("📥 Llamando a modelo.cargar_archivo...")
@@ -41,31 +41,31 @@ class ControladorCSV:
             print(f"📊 DataFrame cargado con shape {df.shape}")
 
             if df.empty:
-                print("❌ CSV vacío o ilegible")
+                print("CSV vacío o ilegible")
                 QMessageBox.warning(None, "CSV vacío", "El archivo CSV no contiene datos o tiene formato incorrecto.")
                 return
 
-            print("🧱 Construyendo modelo de tabla...")
+            print("Construyendo modelo de tabla...")
             modelo_tabla = QStandardItemModel()
             modelo_tabla.setHorizontalHeaderLabels(df.columns.tolist())
             for i in range(df.shape[0]):
                 fila = [QStandardItem(str(val)) for val in df.iloc[i]]
                 modelo_tabla.appendRow(fila)
             self.vista.tabla.setModel(modelo_tabla)
-            print("✅ Tabla renderizada correctamente")
+            print("Tabla renderizada correctamente")
 
-            print("🎛️ Actualizando combos de columnas...")
+            print("Actualizando combos de columnas...")
             self.vista.combo_x.clear()
             self.vista.combo_y.clear()
             self.vista.combo_x.addItems(df.columns.tolist())
             self.vista.combo_y.addItems(df.columns.tolist())
-            print("✅ Comboboxes actualizados")
+            print("Comboboxes actualizados")
 
-            print("💾 Guardando CSV en base de datos...")
+            print("Guardando CSV en base de datos...")
             self.guardar_csv_en_bd(ruta)
 
         except Exception as e:
-            print(f"❌ Error al abrir CSV: {e}")
+            print(f"Error al abrir CSV: {e}")
             QMessageBox.critical(None, "Error al cargar CSV", f"Se produjo un error:\n{e}")
 
     def graficar(self):
@@ -84,15 +84,15 @@ class ControladorCSV:
                 ax.grid(True)
                 self.vista.figure.tight_layout()
                 self.vista.canvas.draw()  # ← pinta en la interfaz CSV
-                print("📈 Gráfico generado en la misma ventana")
+                print("Gráfico generado en la misma ventana")
             else:
                 QMessageBox.warning(None, "Columnas inválidas", "Las columnas seleccionadas no existen.")
         else:
             QMessageBox.warning(None, "Selección incompleta", "Seleccione las columnas X e Y.")
     
     def guardar_csv_en_bd(self, ruta_archivo):
-        print("🔍 ENTRANDO a guardar_csv_en_bd()")
-        print(f"📄 Archivo recibido: {ruta_archivo}")
+        print("ENTRANDO a guardar_csv_en_bd()")
+        print(f"Archivo recibido: {ruta_archivo}")
 
         try:
             conexion = mysql.connector.connect(
@@ -104,14 +104,14 @@ class ControladorCSV:
                 connection_timeout=5,
                 use_pure=True
             )
-            print("✅ Conexión establecida desde GUI")
+            print("Conexión establecida desde GUI")
 
             cursor = conexion.cursor()
 
             nombre_archivo = os.path.basename(ruta_archivo)
             tipo_archivo = os.path.splitext(nombre_archivo)[1].replace('.', '').upper()
 
-            print(f"🧾 Insertando: tipo={tipo_archivo}, nombre={nombre_archivo}, ruta={ruta_archivo}")
+            print(f"Insertando: tipo={tipo_archivo}, nombre={nombre_archivo}, ruta={ruta_archivo}")
 
             query = """
                 INSERT INTO archivos_varios (tipo_archivo, nombre_archivo, ruta_archivo)
@@ -121,26 +121,26 @@ class ControladorCSV:
             cursor.execute(query, valores)
             conexion.commit()
 
-            print("✅ Inserción exitosa. ID insertado:", cursor.lastrowid)
+            print("Inserción exitosa. ID insertado:", cursor.lastrowid)
 
             cursor.close()
             conexion.close()
-            print("🧹 Conexión cerrada correctamente.")
+            print("Conexión cerrada correctamente.")
 
             QMessageBox.information(None, "Éxito", f"El archivo '{nombre_archivo}' fue guardado en la base de datos.")
 
         except mysql.connector.Error as e:
-            print("❌ Error de conexión o inserción:")
+            print("Error de conexión o inserción:")
             traceback.print_exc()
             QMessageBox.critical(None, "Error BD", f"Error al guardar en la base de datos:\n{e}")
 
         except Exception as ex:
-            print("🛑 Error inesperado en guardar_csv_en_bd():")
+            print("Error inesperado en guardar_csv_en_bd():")
             traceback.print_exc()
             QMessageBox.critical(None, "Error", f"Error inesperado:\n{ex}")
     
     def ver_registros_bd(self):
-        print("📥 Consultando registros guardados en la base...")
+        print("Consultando registros guardados en la base...")
 
         try:
             conexion = mysql.connector.connect(
@@ -152,14 +152,14 @@ class ControladorCSV:
                 connection_timeout=5,
                 use_pure=True
             )
-            print("✅ Conexión establecida para consulta")
+            print("Conexión establecida para consulta")
 
             cursor = conexion.cursor()
             cursor.execute("SELECT id, tipo_archivo, nombre_archivo, ruta_archivo FROM archivos_varios")
             registros = cursor.fetchall()
 
             if not registros:
-                print("📭 No hay archivos guardados aún.")
+                print("No hay archivos guardados aún.")
                 QMessageBox.information(None, "Sin registros", "Aún no se han insertado archivos.")
                 return
 
@@ -170,18 +170,18 @@ class ControladorCSV:
                 modelo.appendRow(items)
 
             self.vista.tabla.setModel(modelo)
-            print(f"✅ {len(registros)} registros cargados en tabla desde la BD")
+            print(f"{len(registros)} registros cargados en tabla desde la BD")
 
             cursor.close()
             conexion.close()
 
         except mysql.connector.Error as e:
-            print("❌ Error de conexión o consulta:")
+            print("Error de conexión o consulta:")
             traceback.print_exc()
             QMessageBox.critical(None, "Error BD", f"No se pudieron obtener los registros:\n{e}")
 
         except Exception as ex:
-            print("🛑 Error inesperado en ver_registros_bd():")
+            print("Error inesperado en ver_registros_bd():")
             traceback.print_exc()
             QMessageBox.critical(None, "Error", f"No se pudieron obtener los registros:\n{ex}")
     
@@ -206,7 +206,7 @@ class ControladorCSV:
                 )
                 cursor = conexion.cursor()
 
-                # 🧠 Consulta que elimina duplicados y conserva el primero por combinación clave
+                # Consulta que elimina duplicados y conserva el primero por combinación clave
                 query = """
                     DELETE FROM archivos_varios
                     WHERE id NOT IN (
@@ -230,10 +230,10 @@ class ControladorCSV:
                 conexion.close()
 
             except Exception as e:
-                print(f"❌ Error al eliminar duplicados: {e}")
+                print(f"Error al eliminar duplicados: {e}")
                 QMessageBox.critical(None, "Error BD", f"No se pudieron eliminar los duplicados:\n{e}")
         else:
-            print("⛔ Cancelado por el usuario")
+            print("Cancelado por el usuario")
     
     def actualizar_tabla(self, df):
         modelo_tabla = QStandardItemModel()
@@ -244,7 +244,7 @@ class ControladorCSV:
             modelo_tabla.appendRow(fila)
 
         self.vista.tabla.setModel(modelo_tabla)
-        print("✅ Tabla actualizada")
+        print("Tabla actualizada")
     
     def detectar_separador(self, ruta):
         with open(ruta, 'r', encoding='utf-8') as archivo:
@@ -261,7 +261,7 @@ class ControladorCSV:
             try:
                 separador = self.detectar_separador(self.ruta_csv_actual)
                 df = pd.read_csv(self.ruta_csv_actual, sep=separador)
-                print(f"📂 CSV recargado con separador '{separador}' — Shape: {df.shape}")
+                print(f"CSV recargado con separador '{separador}' — Shape: {df.shape}")
 
                 self.modelo.df = df
                 self.actualizar_tabla(df)
@@ -271,11 +271,11 @@ class ControladorCSV:
                 self.vista.combo_x.addItems(df.columns.tolist())
                 self.vista.combo_y.addItems(df.columns.tolist())
 
-                print("🔁 Recarga completada con éxito")
+                print("Recarga completada con éxito")
 
             except Exception as e:
-                print(f"❌ Error al recargar CSV: {e}")
+                print(f"Error al recargar CSV: {e}")
                 QMessageBox.critical(None, "Error al recargar", f"No se pudo cargar correctamente:\n{e}")
         else:
-            print("⚠️ No hay CSV previamente cargado")
+            print(" No hay CSV previamente cargado")
             QMessageBox.warning(None, "CSV no disponible", "No hay archivo CSV previamente cargado.")
