@@ -2,7 +2,7 @@ import mysql.connector
 
 def conectar():
     try:
-        conexion = mysql.connector.connect(host='localhost',user='root',contraseña='',database='proyecto3')
+        conexion = mysql.connector.connect(host='localhost',user='root',password='',database='proyecto3')
         return conexion
     
     except mysql.connector.Error as err:
